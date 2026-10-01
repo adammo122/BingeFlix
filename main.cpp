@@ -26,7 +26,7 @@ int main()
 
         int showChoice = 0;
         int totalEpisodes = 0;
-        double episodeDurationMinutes = 0.0;
+        double episodeDurationMinutes = 0.;
         double dailyWatchHours = 0.0;
         string showName = "";
 
