@@ -9,14 +9,30 @@
 #include <iomanip>
 #include <string>
 #include <cmath>
+#include <limits> 
 
 using namespace std;
 
+// Modification 1: Extracted risk level evaluation into its own function
+string getRiskLevel(double hours)
+{
+    if (hours < 2.0) return "LOW (Casual Viewer)";
+    if (hours <= 4.0) return "MODERATE (Dedicated Binger)";
+    return "HIGH / SEVERE (Marathon Binger)";
+}
+
+// Modification 2: Extracted health advice logic into its own function
+string getHealthAdvice(double hours)
+{
+    if (hours < 2.0) return "Balanced schedule! Minimal impact on sleep and daily routine.";
+    if (hours <= 4.0) return "Take 10-minute stretch breaks between episodes and stay hydrated.";
+    return "Warning! Watching over 4 hours daily may cause eye strain and sleep disturbance.";
+}
+
 int main()
 {
-    char repeatChoice; // Modification 1: Variable for the replay loop
+    char repeatChoice;
 
-    // Modification 2: Wrap the entire application logic in a do-while loop
     do 
     {
         // Welcome Banner
@@ -26,7 +42,7 @@ int main()
 
         int showChoice = 0;
         int totalEpisodes = 0;
-        double episodeDurationMinutes = 0.;
+        double episodeDurationMinutes = 0.0;
         double dailyWatchHours = 0.0;
         string showName = "";
 
@@ -38,6 +54,14 @@ int main()
         cout << "4. Custom Show Entry\n";
         cout << "Enter choice (1-4): ";
         cin >> showChoice;
+
+        if (cin.fail()) 
+        {
+            cin.clear(); 
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
+            cout << "\n[Error] Invalid input! Please enter a number.\n\n";
+            continue; 
+        }
 
         // Process menu selection using a switch statement
         switch (showChoice)
@@ -59,12 +83,26 @@ int main()
             break;
         case 4:
             cout << "\nEnter Custom Show Name: ";
-            cin.ignore(); // Clear buffer
+            cin.ignore(); 
             getline(cin, showName);
+            
             cout << "Enter Total Number of Episodes: ";
             cin >> totalEpisodes;
+            if (cin.fail()) {
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                cout << "\n[Error] Invalid input! Please enter a number.\n\n";
+                continue;
+            }
+            
             cout << "Enter Average Episode Duration (in minutes): ";
             cin >> episodeDurationMinutes;
+            if (cin.fail()) {
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                cout << "\n[Error] Invalid input! Please enter a number.\n\n";
+                continue;
+            }
             break;
         default:
             cout << "\n[Error] Invalid choice! Defaulting to Custom Show.\n";
@@ -78,18 +116,26 @@ int main()
         if (totalEpisodes <= 0 || episodeDurationMinutes <= 0)
         {
             cout << "\n[Error] Episode count and duration must be greater than zero. Restarting...\n\n";
-            continue; // Modification 4: Restart the loop instead of exiting the program
+            continue; 
         }
 
         // Step 2: Get Daily Watch Hours
         cout << "\nHow many hours can you dedicate to watching per day? ";
         cin >> dailyWatchHours;
 
+        if (cin.fail()) 
+        {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << "\n[Error] Invalid input! Please enter a number.\n\n";
+            continue;
+        }
+
         // Input Validation for Watch Hours
         if (dailyWatchHours <= 0.0)
         {
             cout << "\n[Error] Daily watch time must be greater than 0 hours. Restarting...\n\n";
-            continue; // Modification 4: Restart the loop instead of exiting the program
+            continue; 
         }
 
         // Step 3: Calculations
@@ -98,25 +144,9 @@ int main()
         double daysToFinish = totalRuntimeHours / dailyWatchHours;
         double episodesPerDay = (dailyWatchHours * 60.0) / episodeDurationMinutes;
 
-        // Step 4: Evaluate "Binge Risk Level" using if / else if logic
-        string riskLevel = "";
-        string healthAdvice = "";
-
-        if (dailyWatchHours < 2.0)
-        {
-            riskLevel = "LOW (Casual Viewer)";
-            healthAdvice = "Balanced schedule! Minimal impact on sleep and daily routine.";
-        }
-        else if (dailyWatchHours >= 2.0 && dailyWatchHours <= 4.0)
-        {
-            riskLevel = "MODERATE (Dedicated Binger)";
-            healthAdvice = "Take 10-minute stretch breaks between episodes and stay hydrated.";
-        }
-        else
-        {
-            riskLevel = "HIGH / SEVERE (Marathon Binger)";
-            healthAdvice = "Warning! Watching over 4 hours daily may cause eye strain and sleep disturbance.";
-        }
+        // Step 4: Evaluate "Binge Risk Level" using our custom functions (Modification 3)
+        string riskLevel = getRiskLevel(dailyWatchHours);
+        string healthAdvice = getHealthAdvice(dailyWatchHours);
 
         // Step 5: Output Summary
         cout << "\n========================================================\n";
@@ -130,12 +160,11 @@ int main()
         cout << " Health Recommendation : " << healthAdvice << "\n";
         cout << "========================================================\n";
         
-        // Modification 3: Prompt user to repeat
         cout << "\nWould you like to plan another show? (Y/N): ";
         cin >> repeatChoice;
         cout << "\n";
 
-    } while (repeatChoice == 'Y' || repeatChoice == 'y'); // Modification 2: Loop condition
+    } while (repeatChoice == 'Y' || repeatChoice == 'y'); 
 
     cout << "Thank you for using the Netflix Companion App!\n";
 
