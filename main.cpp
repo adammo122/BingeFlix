@@ -9,23 +9,27 @@
 #include <iomanip>
 #include <string>
 #include <cmath>
-#include <limits> 
+#include <limits>
 
 using namespace std;
 
-// Modification 1: Extracted risk level evaluation into its own function
+// Modification 1 & 2: Function to evaluate the user's binge risk level based on daily watch hours
 string getRiskLevel(double hours)
 {
-    if (hours < 2.0) return "LOW (Casual Viewer)";
-    if (hours <= 4.0) return "MODERATE (Dedicated Binger)";
+    if (hours < 2.0)
+        return "LOW (Casual Viewer)";
+    if (hours <= 4.0)
+        return "MODERATE (Dedicated Binger)";
     return "HIGH / SEVERE (Marathon Binger)";
 }
 
-// Modification 2: Extracted health advice logic into its own function
+// Modification 1 & 2: Function to provide health recommendations based on daily watch hours
 string getHealthAdvice(double hours)
 {
-    if (hours < 2.0) return "Balanced schedule! Minimal impact on sleep and daily routine.";
-    if (hours <= 4.0) return "Take 10-minute stretch breaks between episodes and stay hydrated.";
+    if (hours < 2.0)
+        return "Balanced schedule! Minimal impact on sleep and daily routine.";
+    if (hours <= 4.0)
+        return "Take 10-minute stretch breaks between episodes and stay hydrated.";
     return "Warning! Watching over 4 hours daily may cause eye strain and sleep disturbance.";
 }
 
@@ -33,7 +37,7 @@ int main()
 {
     char repeatChoice;
 
-    do 
+    do
     {
         // Welcome Banner
         cout << "========================================================\n";
@@ -55,12 +59,12 @@ int main()
         cout << "Enter choice (1-4): ";
         cin >> showChoice;
 
-        if (cin.fail()) 
+        if (cin.fail())
         {
-            cin.clear(); 
-            cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
             cout << "\n[Error] Invalid input! Please enter a number.\n\n";
-            continue; 
+            continue;
         }
 
         // Process menu selection using a switch statement
@@ -83,21 +87,23 @@ int main()
             break;
         case 4:
             cout << "\nEnter Custom Show Name: ";
-            cin.ignore(); 
+            cin.ignore();
             getline(cin, showName);
-            
+
             cout << "Enter Total Number of Episodes: ";
             cin >> totalEpisodes;
-            if (cin.fail()) {
+            if (cin.fail())
+            {
                 cin.clear();
                 cin.ignore(numeric_limits<streamsize>::max(), '\n');
                 cout << "\n[Error] Invalid input! Please enter a number.\n\n";
                 continue;
             }
-            
+
             cout << "Enter Average Episode Duration (in minutes): ";
             cin >> episodeDurationMinutes;
-            if (cin.fail()) {
+            if (cin.fail())
+            {
                 cin.clear();
                 cin.ignore(numeric_limits<streamsize>::max(), '\n');
                 cout << "\n[Error] Invalid input! Please enter a number.\n\n";
@@ -116,14 +122,14 @@ int main()
         if (totalEpisodes <= 0 || episodeDurationMinutes <= 0)
         {
             cout << "\n[Error] Episode count and duration must be greater than zero. Restarting...\n\n";
-            continue; 
+            continue;
         }
 
         // Step 2: Get Daily Watch Hours
         cout << "\nHow many hours can you dedicate to watching per day? ";
         cin >> dailyWatchHours;
 
-        if (cin.fail()) 
+        if (cin.fail())
         {
             cin.clear();
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
@@ -135,7 +141,7 @@ int main()
         if (dailyWatchHours <= 0.0)
         {
             cout << "\n[Error] Daily watch time must be greater than 0 hours. Restarting...\n\n";
-            continue; 
+            continue;
         }
 
         // Step 3: Calculations
@@ -159,12 +165,12 @@ int main()
         cout << " Binge Risk Level      : " << riskLevel << "\n";
         cout << " Health Recommendation : " << healthAdvice << "\n";
         cout << "========================================================\n";
-        
+
         cout << "\nWould you like to plan another show? (Y/N): ";
         cin >> repeatChoice;
         cout << "\n";
 
-    } while (repeatChoice == 'Y' || repeatChoice == 'y'); 
+    } while (repeatChoice == 'Y' || repeatChoice == 'y');
 
     cout << "Thank you for using the Netflix Companion App!\n";
 
